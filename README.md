@@ -1,1 +1,1 @@
-# book-catalogue
+# Book catalogue
