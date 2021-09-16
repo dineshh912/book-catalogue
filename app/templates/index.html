@@ -1,6 +1,22 @@
 {% extends "base.html" %} {% block content %}
+
+<p>
+    <input type="text" id="search-term">
+</p>
+
 <div>
 
     {% for book in books %} {{book.book_info}} {% endfor %}
 </div>
 {% endblock %}
+<script>
+    var settings = {
+        "url": "https://www.googleapis.com/books/v1/volumes?q=isbn:9781449372620",
+        "method": "GET",
+        "timeout": 0,
+    };
+
+    $.ajax(settings).done(function(response) {
+        console.log(response);
+    });
+</script>
