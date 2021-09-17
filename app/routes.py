@@ -1,10 +1,11 @@
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, request
 from flask_login.utils import login_required
 from app import app
 from app.forms import LoginForm, RegistrationForm, SearchForm
 from flask_login import current_user, login_user, logout_user
 from app.models import User
 from app import db
+import requests
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -49,4 +50,20 @@ def logout():
 @login_required
 def index():
     return render_template("index.html")
+
+
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    print(request.form['type'])
+    if(request.form.search_type == "isbn"):
+        url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{request.form.term}"
+    else:
+        url = f"https://www.googleapis.com/books/v1/volumes?q=title:{request.form.term}"
+    
+    payload={}
+    headers = {}
+    response = requests.request("GET", url, headers=headers, data=payload)
+
+    return response.json()
+
 

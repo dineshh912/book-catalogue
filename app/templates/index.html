@@ -1,22 +1,84 @@
 {% extends "base.html" %} {% block content %}
 
-<p>
-    <input type="text" id="search-term">
-</p>
 
-<div>
+<header>
+    <div class="collapse bg-dark" id="navbarHeader">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 col-md-7 py-4">
+                    <h4 class="text-white">About</h4>
+                    <p class="text-muted">­ A web application that helps a user record details about the books they own. The application allows a user to login and type in an ISBN, which will instigate a search using the Google Books API. The server will save some of the information
+                        to a database, which will be used to show the user their list of books.</p>
+                </div>
+                <div class="col-sm-4 offset-md-1 py-4">
+                    <ul class="list-unstyled">
+                        <li><a href="{{url_for('logout')}}" class="text-white">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a href="#" class="navbar-brand d-flex align-items-center">
+                <strong>Book Catalogue</strong>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        </div>
+    </div>
+</header>
 
-    {% for book in books %} {{book.book_info}} {% endfor %}
-</div>
+<main>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="search-form">
+                    <select class="form-control" id="search-type">
+                        <option class="" value="isbn">ISBN</option>
+                        <option class="" value="title"> Title</option>
+                        </select>
+                    <br/>
+                    <input class="form-control" type="text" id="search-term" placeholder="Enter search term"></p>
+
+                    <button class="submit w-100 btn btn-lg btn-primary">Search</button>
+
+                </div>
+
+                <div class="card book-list">
+
+
+                </div>
+            </div>
+            <div class="col-md-7">
+                <h5 class="text-center pt-2">My book catalogue</h5>
+                <div class="book-info-list">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Thumb</th>
+                                <th scope="col">Author</th>
+                                <th scope="col">Page Count</th>
+                                <th scope="col">Rating</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for book in books %} {{book.book_info}} {% endfor %}
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+
+
 {% endblock %}
-<script>
-    var settings = {
-        "url": "https://www.googleapis.com/books/v1/volumes?q=isbn:9781449372620",
-        "method": "GET",
-        "timeout": 0,
-    };
-
-    $.ajax(settings).done(function(response) {
-        console.log(response);
-    });
-</script>
