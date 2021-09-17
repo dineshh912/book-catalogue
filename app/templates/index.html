@@ -31,24 +31,65 @@
 </header>
 
 <main>
+
+    {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
+    <div class="alert alert-danger" role="alert">
+        {{message}}
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-5">
                 <div class="search-form">
-                    <select class="form-control" id="search-type">
-                        <option class="" value="isbn">ISBN</option>
-                        <option class="" value="title"> Title</option>
-                        </select>
-                    <br/>
-                    <input class="form-control" type="text" id="search-term" placeholder="Enter search term"></p>
-
-                    <button class="submit w-100 btn btn-lg btn-primary">Search</button>
+                    <form action="" method="post" novalidate>
+                        {{ form.hidden_tag() }}
+                        <div class="form-floating pb-1">
+                            {{ form.type(class="form-control") }}
+                            <label for="floatingInput">{{ form.type.label }}</label> {% for error in form.type.errors %}
+                            <span style="color: red">[{{ error }}]</span> {% endfor %}
+                        </div>
+                        <div class="form-floating pb-1">
+                            {{ form.search(size=32, class="form-control", placeholder="Enter Search Term") }}
+                            <label for="floatingPassword">{{ form.search.label }}</label>{% for error in form.search.errors %}
+                            <span style="color: red">[{{ error }}]</span> {% endfor %}
+                        </div>
+                        {{ form.submit(class="w-100 btn btn-lg btn-primary") }}
+                    </form>
 
                 </div>
 
                 <div class="card book-list">
+                    {% if book_list is string %}
 
+                    <div class="row">
 
+                        <div class="col-md-9">
+                            <div class="card-body">
+                                <p> No result found !</p>
+                            </div>
+                        </div>
+                    </div>
+                    {%else%} {% for item in book_list %}
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img src={{item.volumeInfo.imageLinks.smallThumbnail}} class="card-img-top" id="img_{{item.id}}" style="margin:15px;">
+                        </div>
+                        <div class="col-md-9">
+                            <div class="card-body">
+                                <h6 class="card-title"><span id="title_{{item.id}}">{{item.volumeInfo.title}}</span></h6>
+                                <p class="card-text"> Authors: <span id="author_{{item.id}}">{{item.volumeInfo.authors}}</span></p>
+                                <p class="">Pages:<span id="page_{{item.id}}">{{item.volumeInfo.pageCount}}</span></p>
+                                {% if item.volumeInfo.averageRating is number%}
+                                <p class="">Rating: <span id="rating_{{item.id}}">{{item.volumeInfo.averageRating}}</span></p>
+                                {% else %}
+                                <p class="">Rating: <span id="rating_{{item.id}}">Not rated</span></p>
+                                {% endif %}
+                                <button class="btn btn-primary add" id='{{item.id}}'> Add to my list </buttons>
+                                    </div >
+                                </div >
+                            </div >
+                        {%endfor%}
+                    {%endif%}
                 </div>
             </div>
             <div class="col-md-7">
@@ -57,7 +98,6 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
                                 <th scope="col">Title</th>
                                 <th scope="col">Thumb</th>
                                 <th scope="col">Author</th>
@@ -67,7 +107,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for book in books %} {{book.book_info}} {% endfor %}
+                            {% for i in books %} 
+                                <tr>
+                                    <td>{{i.book_title}}</td>
+                                    <td><img src={{i.book_thumb}} class="card-img-top"  style="margin:15px;width:40%"></td>
+                                    <td>{{i.book_author}}</td>
+                                    <td>{{i.book_page}}</td>
+                                    <td>{{i.book_rating}}</td>
+                                    <td><a href="/delete/{{i.book_id}}">Delete</a></td>
+                                </tr>
+
+                                
+                            {% endfor %}
 
                         </tbody>
                     </table>
